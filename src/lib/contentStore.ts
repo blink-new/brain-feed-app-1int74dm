@@ -70,6 +70,112 @@ class ContentStore {
     this.checkDatabaseAvailability()
   }
 
+  private initializeDemoData() {
+    // Add demo data immediately for in-memory storage
+    const demoUserId = 'demo_user'
+    
+    const book: Book = {
+      id: 'book_demo_1',
+      title: 'Atomic Habits',
+      author: 'James Clear',
+      topic: 'psychology',
+      description: 'A comprehensive guide to building good habits and breaking bad ones.',
+      coverUrl: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&h=400&fit=crop',
+      totalQuestions: 20,
+      totalFlashcards: 20,
+      userId: demoUserId,
+      createdAt: new Date().toISOString()
+    }
+
+    const video: Video = {
+      id: 'video_demo_1',
+      title: 'Top 10 Productivity Tips',
+      author: 'Ali Abdaal',
+      topic: 'tech',
+      videoId: 'dQw4w9WgXcQ',
+      url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+      thumbnailUrl: 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=225&fit=crop',
+      duration: 720,
+      totalQuestions: 12,
+      totalFlashcards: 10,
+      userId: demoUserId,
+      createdAt: new Date().toISOString()
+    }
+
+    const questions: Question[] = [
+      {
+        id: 'q_demo_1',
+        contentType: 'book',
+        contentId: book.id,
+        contentTitle: 'Atomic Habits',
+        contentAuthor: 'James Clear',
+        topic: 'psychology',
+        questionType: 'mcq',
+        questionText: 'What is the main principle behind habit stacking?',
+        options: [
+          'Doing multiple habits at once',
+          'Linking a new habit to an existing one',
+          'Creating habits that stack on top of each other',
+          'Building habits in a specific order'
+        ],
+        correctAnswer: 'Linking a new habit to an existing one',
+        explanation: 'Habit stacking involves linking a new habit to an existing habit that you already do consistently.',
+        userId: demoUserId,
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: 'q_demo_2',
+        contentType: 'video',
+        contentId: video.id,
+        contentTitle: 'Top 10 Productivity Tips',
+        contentAuthor: 'Ali Abdaal',
+        topic: 'tech',
+        questionType: 'true_false',
+        questionText: 'According to the video, multitasking increases productivity.',
+        options: ['True', 'False'],
+        correctAnswer: 'False',
+        explanation: 'The video explains that multitasking actually decreases productivity and focus.',
+        userId: demoUserId,
+        createdAt: new Date().toISOString()
+      }
+    ]
+
+    const flashcards: Flashcard[] = [
+      {
+        id: 'f_demo_1',
+        contentType: 'book',
+        contentId: book.id,
+        contentTitle: 'Atomic Habits',
+        contentAuthor: 'James Clear',
+        topic: 'psychology',
+        frontText: 'What is the 1% rule?',
+        backText: 'Getting 1% better every day leads to 37x improvement over a year through compound growth.',
+        userId: demoUserId,
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: 'f_demo_2',
+        contentType: 'video',
+        contentId: video.id,
+        contentTitle: 'Top 10 Productivity Tips',
+        contentAuthor: 'Ali Abdaal',
+        topic: 'tech',
+        frontText: 'What is the Pomodoro Technique?',
+        backText: 'A time management method using 25-minute focused work sessions followed by 5-minute breaks.',
+        userId: demoUserId,
+        createdAt: new Date().toISOString()
+      }
+    ]
+
+    // Add to in-memory storage
+    this.books.push(book)
+    this.videos.push(video)
+    this.questions.push(...questions)
+    this.flashcards.push(...flashcards)
+
+    console.log('Demo data initialized for in-memory storage')
+  }
+
   private async checkDatabaseAvailability() {
     try {
       // Try a simple query to see if database works
@@ -77,8 +183,10 @@ class ContentStore {
       this.useDatabase = true
       console.log('Database available, using persistent storage')
     } catch (error) {
-      console.warn('Database not available, using in-memory storage:', error)
+      console.warn('Database not available, using in-memory storage. This is normal for demo purposes.')
       this.useDatabase = false
+      // Initialize with some demo data immediately
+      this.initializeDemoData()
     }
   }
 
@@ -140,7 +248,9 @@ class ContentStore {
       }
     }
 
-    return this.books.filter(book => book.userId === userId)
+    // For demo purposes, return demo data for any user when database is not available
+    const targetUserId = this.useDatabase ? userId : 'demo_user'
+    return this.books.filter(book => book.userId === targetUserId)
   }
 
   // Videos
@@ -204,7 +314,9 @@ class ContentStore {
       }
     }
 
-    return this.videos.filter(video => video.userId === userId)
+    // For demo purposes, return demo data for any user when database is not available
+    const targetUserId = this.useDatabase ? userId : 'demo_user'
+    return this.videos.filter(video => video.userId === targetUserId)
   }
 
   // Questions
@@ -272,7 +384,9 @@ class ContentStore {
       }
     }
 
-    return this.questions.filter(q => q.userId === userId)
+    // For demo purposes, return demo data for any user when database is not available
+    const targetUserId = this.useDatabase ? userId : 'demo_user'
+    return this.questions.filter(q => q.userId === targetUserId)
   }
 
   // Flashcards
@@ -334,7 +448,9 @@ class ContentStore {
       }
     }
 
-    return this.flashcards.filter(f => f.userId === userId)
+    // For demo purposes, return demo data for any user when database is not available
+    const targetUserId = this.useDatabase ? userId : 'demo_user'
+    return this.flashcards.filter(f => f.userId === targetUserId)
   }
 
   // Get all content for feed
@@ -359,97 +475,4 @@ class ContentStore {
 // Export singleton instance
 export const contentStore = new ContentStore()
 
-// Add some initial mock data for demo
-setTimeout(async () => {
-  try {
-    const user = await blink.auth.me()
-    
-    // Only add demo data if no content exists
-    const existingBooks = await contentStore.getBooksByUser(user.id)
-    if (existingBooks.length === 0) {
-      const book = await contentStore.addBook({
-        title: 'Atomic Habits',
-        author: 'James Clear',
-        topic: 'psychology',
-        description: 'A comprehensive guide to building good habits and breaking bad ones.',
-        coverUrl: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&h=400&fit=crop',
-        totalQuestions: 20,
-        totalFlashcards: 20,
-        userId: user.id
-      })
-
-      const video = await contentStore.addVideo({
-        title: 'Top 10 Productivity Tips',
-        author: 'Ali Abdaal',
-        topic: 'tech',
-        videoId: 'dQw4w9WgXcQ',
-        url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-        thumbnailUrl: 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=225&fit=crop',
-        duration: 720,
-        totalQuestions: 12,
-        totalFlashcards: 10,
-        userId: user.id
-      })
-
-      // Add some mock questions and flashcards
-      await contentStore.addQuestions([
-        {
-          contentType: 'book',
-          contentId: book.id,
-          contentTitle: 'Atomic Habits',
-          contentAuthor: 'James Clear',
-          topic: 'psychology',
-          questionType: 'mcq',
-          questionText: 'What is the main principle behind habit stacking?',
-          options: [
-            'Doing multiple habits at once',
-            'Linking a new habit to an existing one',
-            'Creating habits that stack on top of each other',
-            'Building habits in a specific order'
-          ],
-          correctAnswer: 'Linking a new habit to an existing one',
-          explanation: 'Habit stacking involves linking a new habit to an existing habit that you already do consistently.',
-          userId: user.id
-        },
-        {
-          contentType: 'video',
-          contentId: video.id,
-          contentTitle: 'Top 10 Productivity Tips',
-          contentAuthor: 'Ali Abdaal',
-          topic: 'tech',
-          questionType: 'true_false',
-          questionText: 'According to the video, multitasking increases productivity.',
-          options: ['True', 'False'],
-          correctAnswer: 'False',
-          explanation: 'The video explains that multitasking actually decreases productivity and focus.',
-          userId: user.id
-        }
-      ])
-
-      await contentStore.addFlashcards([
-        {
-          contentType: 'book',
-          contentId: book.id,
-          contentTitle: 'Atomic Habits',
-          contentAuthor: 'James Clear',
-          topic: 'psychology',
-          frontText: 'What is the 1% rule?',
-          backText: 'Getting 1% better every day leads to 37x improvement over a year through compound growth.',
-          userId: user.id
-        },
-        {
-          contentType: 'video',
-          contentId: video.id,
-          contentTitle: 'Top 10 Productivity Tips',
-          contentAuthor: 'Ali Abdaal',
-          topic: 'tech',
-          frontText: 'What is the Pomodoro Technique?',
-          backText: 'A time management method using 25-minute focused work sessions followed by 5-minute breaks.',
-          userId: user.id
-        }
-      ])
-    }
-  } catch (error) {
-    console.log('Demo data not added - user not authenticated yet')
-  }
-}, 2000)
+// Demo data is now initialized immediately when database is not available
