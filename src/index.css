@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 213 94% 68%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 24 95% 53%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 213 94% 68%;
+    --radius: 0.5rem;
+    
+    /* Topic Colors */
+    --psychology: 213 94% 68%;
+    --tech: 24 95% 53%;
+    --business: 173 58% 39%;
+    --history: 0 84% 60%;
+    --science: 142 76% 36%;
+    
+    /* Game UI Colors */
+    --xp-bar: 142 76% 36%;
+    --streak: 24 95% 53%;
+    --mastery: 45 93% 47%;
+  }
+  
+  .dark {
+    --background: 222 84% 4.9%;
+    --foreground: 0 0% 98%;
+    --card: 222 84% 4.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 222 84% 4.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 213 94% 68%;
+    --primary-foreground: 222 84% 4.9%;
+    --secondary: 217 32.6% 17.5%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 217 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 24 95% 53%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 217 32.6% 17.5%;
+    --input: 217 32.6% 17.5%;
+    --ring: 213 94% 68%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+}
+
+@layer components {
+  .brutalist-border {
+    @apply border-4 border-black;
+  }
+  
+  .brutalist-shadow {
+    box-shadow: 4px 4px 0 0 #000;
+  }
+  
+  .topic-psychology {
+    @apply bg-blue-600 text-white;
+  }
+  
+  .topic-tech {
+    @apply bg-orange-500 text-white;
+  }
+  
+  .topic-business {
+    @apply bg-teal-600 text-white;
+  }
+  
+  .topic-history {
+    @apply bg-red-600 text-white;
+  }
+  
+  .topic-science {
+    @apply bg-green-600 text-white;
+  }
+  
+  .shake {
+    animation: shake 0.5s ease-in-out;
+  }
+  
+  .flash-correct {
+    animation: flash-correct 0.6s ease-in-out;
+  }
+  
+  .flash-wrong {
+    animation: flash-wrong 0.6s ease-in-out;
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+@keyframes flash-correct {
+  0% { background-color: transparent; }
+  50% { background-color: #22c55e; }
+  100% { background-color: transparent; }
+}
+
+@keyframes flash-wrong {
+  0% { background-color: transparent; }
+  50% { background-color: #ef4444; }
+  100% { background-color: transparent; }
+}
