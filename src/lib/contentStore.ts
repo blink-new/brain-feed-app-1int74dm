@@ -245,12 +245,32 @@ class ContentStore {
       } catch (error) {
         console.warn('Failed to get books from database, using memory:', error)
         this.useDatabase = false
+        // Re-initialize demo data if needed
+        if (this.books.length === 0) {
+          this.initializeDemoData()
+        }
       }
     }
 
     // For demo purposes, return demo data for any user when database is not available
-    const targetUserId = this.useDatabase ? userId : 'demo_user'
-    return this.books.filter(book => book.userId === targetUserId)
+    if (!this.useDatabase) {
+      // Create user-specific demo data if it doesn't exist
+      const userBooks = this.books.filter(book => book.userId === userId)
+      if (userBooks.length === 0 && this.books.length > 0) {
+        // Clone demo data for this user
+        const demoBooks = this.books.filter(book => book.userId === 'demo_user')
+        const userSpecificBooks = demoBooks.map(book => ({
+          ...book,
+          id: `book_${userId}_${Date.now()}`,
+          userId: userId
+        }))
+        this.books.push(...userSpecificBooks)
+        return userSpecificBooks
+      }
+      return userBooks
+    }
+
+    return this.books.filter(book => book.userId === userId)
   }
 
   // Videos
@@ -311,12 +331,29 @@ class ContentStore {
       } catch (error) {
         console.warn('Failed to get videos from database, using memory:', error)
         this.useDatabase = false
+        if (this.videos.length === 0) {
+          this.initializeDemoData()
+        }
       }
     }
 
     // For demo purposes, return demo data for any user when database is not available
-    const targetUserId = this.useDatabase ? userId : 'demo_user'
-    return this.videos.filter(video => video.userId === targetUserId)
+    if (!this.useDatabase) {
+      const userVideos = this.videos.filter(video => video.userId === userId)
+      if (userVideos.length === 0 && this.videos.length > 0) {
+        const demoVideos = this.videos.filter(video => video.userId === 'demo_user')
+        const userSpecificVideos = demoVideos.map(video => ({
+          ...video,
+          id: `video_${userId}_${Date.now()}`,
+          userId: userId
+        }))
+        this.videos.push(...userSpecificVideos)
+        return userSpecificVideos
+      }
+      return userVideos
+    }
+
+    return this.videos.filter(video => video.userId === userId)
   }
 
   // Questions
@@ -381,12 +418,29 @@ class ContentStore {
       } catch (error) {
         console.warn('Failed to get questions from database, using memory:', error)
         this.useDatabase = false
+        if (this.questions.length === 0) {
+          this.initializeDemoData()
+        }
       }
     }
 
     // For demo purposes, return demo data for any user when database is not available
-    const targetUserId = this.useDatabase ? userId : 'demo_user'
-    return this.questions.filter(q => q.userId === targetUserId)
+    if (!this.useDatabase) {
+      const userQuestions = this.questions.filter(q => q.userId === userId)
+      if (userQuestions.length === 0 && this.questions.length > 0) {
+        const demoQuestions = this.questions.filter(q => q.userId === 'demo_user')
+        const userSpecificQuestions = demoQuestions.map(q => ({
+          ...q,
+          id: `q_${userId}_${Date.now()}`,
+          userId: userId
+        }))
+        this.questions.push(...userSpecificQuestions)
+        return userSpecificQuestions
+      }
+      return userQuestions
+    }
+
+    return this.questions.filter(q => q.userId === userId)
   }
 
   // Flashcards
@@ -445,12 +499,29 @@ class ContentStore {
       } catch (error) {
         console.warn('Failed to get flashcards from database, using memory:', error)
         this.useDatabase = false
+        if (this.flashcards.length === 0) {
+          this.initializeDemoData()
+        }
       }
     }
 
     // For demo purposes, return demo data for any user when database is not available
-    const targetUserId = this.useDatabase ? userId : 'demo_user'
-    return this.flashcards.filter(f => f.userId === targetUserId)
+    if (!this.useDatabase) {
+      const userFlashcards = this.flashcards.filter(f => f.userId === userId)
+      if (userFlashcards.length === 0 && this.flashcards.length > 0) {
+        const demoFlashcards = this.flashcards.filter(f => f.userId === 'demo_user')
+        const userSpecificFlashcards = demoFlashcards.map(f => ({
+          ...f,
+          id: `f_${userId}_${Date.now()}`,
+          userId: userId
+        }))
+        this.flashcards.push(...userSpecificFlashcards)
+        return userSpecificFlashcards
+      }
+      return userFlashcards
+    }
+
+    return this.flashcards.filter(f => f.userId === userId)
   }
 
   // Get all content for feed
